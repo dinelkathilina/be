@@ -62,19 +62,68 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## API Endpoints
+## API Endpoints & Frontend Integration
 
-### Auth
+The backend runs on `http://localhost:5000` by default.
 
-- `POST /auth/register` - Register a new user
-  - Body: `{ "name": "John", "email": "john@example.com", "password": "pass", "role": "user" }`
-- `POST /auth/login` - Login and receive JWT
-  - Body: `{ "email": "john@example.com", "password": "pass" }`
+### 1. Authentication
 
-### Users
+**Register**
 
-- `GET /users` - Get profile (Protected, requires JWT)
-- `GET /users/admin` - Get admin data (Protected, requires JWT + 'admin' role)
+- **URL**: `/auth/register`
+- **Method**: `POST`
+- **Body**:
+  ```json
+  {
+    "name": "John Doe",
+    "email": "john@example.com",
+    "password": "strongpassword",
+    "role": "user"
+  }
+  ```
+  _Note: `role` can be "user" or "admin"._
+
+**Login**
+
+- **URL**: `/auth/login`
+- **Method**: `POST`
+- **Body**:
+  ```json
+  {
+    "email": "john@example.com",
+    "password": "strongpassword"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI..."
+  }
+  ```
+
+### 2. Accessing Protected Routes
+
+All protected routes require the `Authorization` header with the Bearer token received from login.
+
+**Header Format**:
+
+```
+Authorization: Bearer <your_access_token>
+```
+
+**Get User Profile**
+
+- **URL**: `/users`
+- **Method**: `GET`
+- **Headers**: Requires Bearer Token
+- **Response**: Returns the logged-in user's details.
+
+**Get Admin Data**
+
+- **URL**: `/users/admin`
+- **Method**: `GET`
+- **Headers**: Requires Bearer Token (User must have `role: admin`)
+- **Response**: Returns admin-specific data.
 
 ## Verification script
 
